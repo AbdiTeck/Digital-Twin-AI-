@@ -1,115 +1,99 @@
-# 🚀 Digital Twin Pump Monitoring System
+🚀 Digital Twin Pump Monitoring System
 
-Real-time AI-powered predictive maintenance dashboard  
-⚓ Inspired by industrial oil & gas and marine systems  
+![Dashboard Preview](assets/Dashboard1.png)
+![Dashboard Preview](assets/Dashboard2.png)
+![Dashboard Preview](assets/Dashboard3.png)
+![Dashboard Preview](assets/Dashboard4.png)
 
----
+Real-time AI-powered predictive maintenance dashboard
+⚓ Inspired by industrial oil & gas and marine systems
 
-## 📌 Overview
+📌 Overview
 
-This project is a **Digital Twin simulation of an industrial pump**, designed to demonstrate how real-time sensor data and machine learning can be used for predictive maintenance.
+This project demonstrates a Digital Twin of an industrial pump, combining real-time simulation with machine learning to predict equipment failure.
 
-The system continuously simulates operational data and uses an AI model to detect early signs of failure.
+The system simulates sensor data (temperature, vibration, pressure) and uses an AI model to analyze system health and detect anomalies before failure occurs.
 
----
-
-## 🎯 Key Features
-
-### 🔁 Real-Time Simulation
-- Continuous sensor data generation  
-- Mimics real industrial telemetry streams  
-
-### ⚓ Operating Modes
-- **Normal** → Stable conditions  
-- **Degrading** → Gradual performance decline  
-- **Failure** → Critical system breakdown  
-
-### 🧠 Machine Learning (Random Forest)
-- Predicts failure using:
-  - Temperature  
-  - Vibration  
-  - Pressure  
-- Uses ensemble learning for robust predictions  
-
-### 📊 AI Decision Visualization
-- Displays how individual trees vote  
-- Improves interpretability of the model  
-
-### ❤️ Health Score (0–100%)
-- Aggregated system condition indicator  
-- Translates raw sensor data into actionable insight  
-
-### 🚨 Alert System
-- Visual alarm when critical thresholds are reached  
-- Inspired by real SCADA/monitoring systems  
-
----
-
-## 🏗️ System Architecture
-
-
+🎯 Key Features
+🔁 Real-Time Digital Twin Simulation
+Continuous generation of sensor data
+Mimics real industrial telemetry streams
+Supports multiple operating conditions
+⚓ Operating Modes
+Normal → Stable operation
+Degrading → Gradual performance decline
+Failure → Critical system behavior
+🧠 Machine Learning (Random Forest)
+Predicts failure using:
+Temperature
+Vibration
+Pressure
+Ensemble model improves robustness and accuracy
+📊 AI Decision Visualization
+Displays how individual trees vote
+Provides transparency into model decisions
+❤️ Health Score (0–100%)
+Aggregated system condition indicator
+Converts raw sensor data into actionable insight
+🚨 Alert System
+Visual warning and alarm for critical states
+Inspired by SCADA and industrial monitoring systems
+📈 Time-Series Analysis (CFD-Inspired)
+24h-style sensor trend simulation
+Smoothed curves for engineering-style analysis
+Threshold-based failure visualization
+🏗️ System Architecture
 Digital Twin (Simulation)
-↓
-Sensor Data (Temp, Vib, Pressure)
-↓
+        ↓
+Sensor Data (Temperature, Vibration, Pressure)
+        ↓
 Machine Learning Model (Random Forest)
-↓
+        ↓
 Health Score + Prediction
-↓
+        ↓
 Streamlit Dashboard (Visualization)
-
-
----
-
-## 🧪 Failure Detection Logic
+🧪 Failure Detection Logic
 
 The system combines rule-based thresholds with machine learning:
 
-- Temperature > 100°C  
-- Vibration > 15  
-- Pressure < 90  
+Temperature > 100°C
+Vibration > 15
+Pressure < 90
 
-These conditions represent typical failure indicators in rotating equipment.
+These conditions reflect typical failure patterns in rotating equipment.
 
----
-
-## ⚙️ Tech Stack
-
-- Python  
-- Streamlit (UI & dashboard)  
-- Scikit-learn (Machine Learning)  
-- Pandas / NumPy (data handling)  
-- Matplotlib (visualizations)  
-
----
-
-## ▶️ Getting Started
-
-### Install dependencies
-```bash
+⚙️ Tech Stack
+Python
+Streamlit – interactive dashboard
+Scikit-learn – machine learning model
+Pandas / NumPy – data processing
+Matplotlib – visualization
+▶️ Getting Started
+1. Install dependencies
 pip install -r requirements.txt
-Run the application
+2. Run the dashboard
 streamlit run dashboard.py
 💡 Use Cases
 
-This system demonstrates concepts used in:
+This project demonstrates concepts used in:
 
 Predictive maintenance
 Asset performance monitoring
 Industrial IoT (IIoT)
-Energy / Oil & Gas / Marine systems
+Oil & Gas / Marine systems
+Condition-based monitoring
 🧠 What I Learned
 Designing and simulating a Digital Twin system
 Combining rule-based logic with machine learning
-Building real-time interactive dashboards with Streamlit
-Interpreting and debugging ML model behavior
-Structuring a project for production-like clarity and usability
+Building real-time dashboards with Streamlit
+Interpreting AI model behavior (ensemble models)
+Structuring a production-like engineering project
 🚀 Future Improvements
-Predict time-to-failure (remaining useful life)
-Integrate real sensor / IoT data streams
+Predict remaining useful life (RUL)
+Integrate real IoT / sensor data
 Deploy to cloud (Azure / AWS)
 Add automated maintenance recommendations
-Improve model with time-series forecasting (LSTM / ARIMA)
+Use time-series models (LSTM / ARIMA)
 👨‍💻 Author
 
 Developed as a demonstration of Digital Twin and AI-based predictive maintenance systems.
@@ -117,14 +101,7 @@ Developed as a demonstration of Digital Twin and AI-based predictive maintenance
 📬 Demo
 
 🎬 Video demo:
-https://youtu.be/q3fwkgnFMTY
+[https://www.youtube.com/watch?v=q3fwkgnFMTY]
 
 💻 GitHub Repository:
-https://github.com/AbdiTeck/Digital-Twin-AI-
-
-![Assets](dashboard.png)
-![Assets](dashboard2.png)
-![Assets](dashboard3.png)
-=======
-
-
+[https://github.com/AbdiTeck/Digital-Twin-AI-]
