@@ -1,11 +1,11 @@
-🚀 Digital Twin Pump Monitoring System
+# 🚀 Digital Twin Pump Monitoring System
 
 ![Dashboard Preview1](assets/Dashboard1.png)
 ![Dashboard Preview2](assets/Dashboard2.png)
 ![Dashboard Preview3](assets/Dashboard3.png)
 ![Dashboard Preview4](assets/Dashboard4.png)
 
-# 🚀 Digital Twin Pump Monitoring System
+
 
 Real-time AI-powered predictive maintenance dashboard  
 ⚓ Inspired by industrial oil & gas and marine systems  
