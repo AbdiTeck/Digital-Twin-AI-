@@ -5,6 +5,7 @@ import time
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 
+
 st.markdown("""
 <style>
 .blink {
@@ -146,8 +147,63 @@ col1, col2 = st.columns([2, 1])
 # LEFT: SENSOR DATA
 # -----------------------------
 with col1:
-    st.subheader("📈 Live Sensor Data (Digital Twin)")
-    st.line_chart(df, width='stretch')
+    st.subheader("📈 24h Sensor Analysis (Digital Twin CFD View)")
+
+    # Generer tidsserie (basert på mode)
+    def generate_timeseries(mode):
+        time = pd.date_range(end=pd.Timestamp.now(), periods=200, freq="min")
+
+        if mode == "Normal":
+            temp = np.random.normal(70, 2, 200)
+            vib = np.random.normal(5, 1, 200)
+            pressure = np.random.normal(100, 2, 200)
+
+        elif mode == "Degrading":
+            temp = np.linspace(70, 105, 200) + np.random.normal(0, 2, 200)
+            vib = np.linspace(5, 18, 200) + np.random.normal(0, 1, 200)
+            pressure = np.linspace(100, 85, 200) + np.random.normal(0, 2, 200)
+
+        else:  # Failure
+            temp = np.linspace(90, 130, 200) + np.random.normal(0, 3, 200)
+            vib = np.linspace(10, 25, 200) + np.random.normal(0, 2, 200)
+            pressure = np.linspace(95, 70, 200) + np.random.normal(0, 3, 200)
+
+        return pd.DataFrame({
+            "time": time,
+            "temperature": temp,
+            "vibration": vib,
+            "pressure": pressure
+        })
+
+    df = generate_timeseries(mode)
+
+    # Smooth (CFD feel)
+    df["temp_ma"] = df["temperature"].rolling(10).mean()
+    df["vib_ma"] = df["vibration"].rolling(10).mean()
+    df["pressure_ma"] = df["pressure"].rolling(10).mean()
+
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(10, 4))
+
+    # Raw signals (faded)
+    ax.plot(df["time"], df["temperature"], alpha=0.3)
+    ax.plot(df["time"], df["vibration"], alpha=0.3)
+    ax.plot(df["time"], df["pressure"], alpha=0.3)
+
+    # Smoothed lines
+    ax.plot(df["time"], df["temp_ma"], label="Temperature (avg)")
+    ax.plot(df["time"], df["vib_ma"], label="Vibration (avg)")
+    ax.plot(df["time"], df["pressure_ma"], label="Pressure (avg)")
+
+    # Thresholds
+    ax.axhline(100, linestyle="--")
+    ax.axhline(15, linestyle="--")
+    ax.axhline(90, linestyle="--")
+
+    ax.set_title("Sensor Trends Over Time")
+    ax.legend()
+
+    st.pyplot(fig)
 
 # -----------------------------
 # RIGHT: AI VOTING
