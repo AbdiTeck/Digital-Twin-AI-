@@ -117,15 +117,14 @@ Developed as a demonstration of Digital Twin and AI-based predictive maintenance
 📬 Demo
 
 🎬 Video demo:
-[https://youtu.be/q3fwkgnFMTY]
+https://youtu.be/q3fwkgnFMTY
 
 💻 GitHub Repository:
-[https://github.com/AbdiTeck/Digital-Twin-AI-]
+https://github.com/AbdiTeck/Digital-Twin-AI-
 
-![Dashboard](dashboard.png)
-![Dashboard](dashboard2.png)
-![Dashboard](dashboard3.png)
+![Assets](dashboard.png)
+![Assets](dashboard2.png)
+![Assets](dashboard3.png)
 =======
-# Digital-Twin-AI-
-Digital Twin Pump Monitoring System using AI.
+
 
