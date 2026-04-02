@@ -70,14 +70,12 @@ Health Score + Prediction
 Streamlit Dashboard (Visualization)
 
 
----
-
-## ▶️ Run the Dashboard
+ Run the Dashboard
 
 ```bash
 streamlit run dashboard.py
 
-💡 Use Cases
+ 💡 Use Cases
 
 This project demonstrates concepts used in:
 
