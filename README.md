@@ -59,7 +59,22 @@ The system simulates sensor data (temperature, vibration, pressure) and uses an 
 ---
 
 ## 🏗️ System Architecture
-Run the dashboard
+Digital Twin (Simulation)
+↓
+Sensor Data (Temperature, Vibration, Pressure)
+↓
+Machine Learning Model (Random Forest)
+↓
+Health Score + Prediction
+↓
+Streamlit Dashboard (Visualization)
+
+
+---
+
+## ▶️ Run the Dashboard
+
+```bash
 streamlit run dashboard.py
 
 💡 Use Cases
@@ -71,18 +86,21 @@ Asset performance monitoring
 Industrial IoT (IIoT)
 Oil & Gas / Marine systems
 Condition-based monitoring
+
 🧠 What I Learned
 Designing and simulating a Digital Twin system
 Combining rule-based logic with machine learning
 Building real-time dashboards with Streamlit
 Interpreting AI model behavior (ensemble models)
 Structuring a production-like engineering project
+
 🚀 Future Improvements
 Predict remaining useful life (RUL)
 Integrate real IoT / sensor data
 Deploy to cloud (Azure / AWS)
 Add automated maintenance recommendations
 Use time-series models (LSTM / ARIMA)
+
 👨‍💻 Author
 
 Developed as a demonstration of Digital Twin and AI-based predictive maintenance systems.
