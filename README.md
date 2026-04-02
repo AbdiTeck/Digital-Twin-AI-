@@ -5,74 +5,63 @@
 ![Dashboard Preview](assets/Dashboard3.png)
 ![Dashboard Preview](assets/Dashboard4.png)
 
-Real-time AI-powered predictive maintenance dashboard
-⚓ Inspired by industrial oil & gas and marine systems
+# 🚀 Digital Twin Pump Monitoring System
 
-📌 Overview
+Real-time AI-powered predictive maintenance dashboard  
+⚓ Inspired by industrial oil & gas and marine systems  
 
-This project demonstrates a Digital Twin of an industrial pump, combining real-time simulation with machine learning to predict equipment failure.
+---
+
+## 📌 Overview
+
+This project demonstrates a **Digital Twin of an industrial pump**, combining real-time simulation with machine learning to predict equipment failure.
 
 The system simulates sensor data (temperature, vibration, pressure) and uses an AI model to analyze system health and detect anomalies before failure occurs.
 
-🎯 Key Features
-🔁 Real-Time Digital Twin Simulation
-Continuous generation of sensor data
-Mimics real industrial telemetry streams
-Supports multiple operating conditions
-⚓ Operating Modes
-Normal → Stable operation
-Degrading → Gradual performance decline
-Failure → Critical system behavior
-🧠 Machine Learning (Random Forest)
-Predicts failure using:
-Temperature
-Vibration
-Pressure
-Ensemble model improves robustness and accuracy
-📊 AI Decision Visualization
-Displays how individual trees vote
-Provides transparency into model decisions
-❤️ Health Score (0–100%)
-Aggregated system condition indicator
-Converts raw sensor data into actionable insight
-🚨 Alert System
-Visual warning and alarm for critical states
-Inspired by SCADA and industrial monitoring systems
-📈 Time-Series Analysis (CFD-Inspired)
-24h-style sensor trend simulation
-Smoothed curves for engineering-style analysis
-Threshold-based failure visualization
-🏗️ System Architecture
-Digital Twin (Simulation)
-        ↓
-Sensor Data (Temperature, Vibration, Pressure)
-        ↓
-Machine Learning Model (Random Forest)
-        ↓
-Health Score + Prediction
-        ↓
-Streamlit Dashboard (Visualization)
-🧪 Failure Detection Logic
+---
 
-The system combines rule-based thresholds with machine learning:
+## 🎯 Key Features
 
-Temperature > 100°C
-Vibration > 15
-Pressure < 90
+### 🔁 Real-Time Digital Twin Simulation
+- Continuous generation of sensor data  
+- Mimics real industrial telemetry streams  
+- Supports multiple operating conditions  
 
-These conditions reflect typical failure patterns in rotating equipment.
+### ⚓ Operating Modes
+- **Normal** → Stable operation  
+- **Degrading** → Gradual performance decline  
+- **Failure** → Critical system behavior  
 
-⚙️ Tech Stack
-Python
-Streamlit – interactive dashboard
-Scikit-learn – machine learning model
-Pandas / NumPy – data processing
-Matplotlib – visualization
-▶️ Getting Started
-1. Install dependencies
-pip install -r requirements.txt
-2. Run the dashboard
+### 🧠 Machine Learning (Random Forest)
+- Predicts failure using:
+  - Temperature  
+  - Vibration  
+  - Pressure  
+- Ensemble model improves robustness and accuracy  
+
+### 📊 AI Decision Visualization
+- Displays how individual trees vote  
+- Provides transparency into model decisions  
+
+### ❤️ Health Score (0–100%)
+- Aggregated system condition indicator  
+- Converts raw sensor data into actionable insight  
+
+### 🚨 Alert System
+- Visual warning and alarm for critical states  
+- Inspired by SCADA and industrial monitoring systems  
+
+### 📈 Time-Series Analysis (CFD-Inspired)
+- 24h-style sensor trend simulation  
+- Smoothed curves for engineering-style analysis  
+- Threshold-based failure visualization  
+
+---
+
+## 🏗️ System Architecture
+Run the dashboard
 streamlit run dashboard.py
+
 💡 Use Cases
 
 This project demonstrates concepts used in:
