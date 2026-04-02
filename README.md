@@ -1,9 +1,9 @@
 🚀 Digital Twin Pump Monitoring System
 
-![Dashboard Preview](assets/Dashboard1.png)
-![Dashboard Preview](assets/Dashboard2.png)
-![Dashboard Preview](assets/Dashboard3.png)
-![Dashboard Preview](assets/Dashboard4.png)
+![Dashboard Preview1](assets/Dashboard1.png)
+![Dashboard Preview2](assets/Dashboard2.png)
+![Dashboard Preview3](assets/Dashboard3.png)
+![Dashboard Preview4](assets/Dashboard4.png)
 
 # 🚀 Digital Twin Pump Monitoring System
 
@@ -109,6 +109,7 @@ This project demonstrates concepts used in:
 ## 👨‍💻 Author
 
 Developed as a demonstration of Digital Twin and AI-based predictive maintenance systems.
+
 📬 Demo
 
 🎬 Video demo:
