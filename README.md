@@ -4,7 +4,7 @@
 ![Dashboard Preview2](assets/Dashboard2.png)
 ![Dashboard Preview3](assets/Dashboard3.png)
 ![Dashboard Preview4](assets/Dashboard4.png)
-![Dashboard Preview4](assets/Dashboard5.png)
+![Dashboard Preview5](assets/Dashboard5.png)
 
 
 
@@ -114,7 +114,7 @@ Developed as a demonstration of Digital Twin and AI-based predictive maintenance
 📬 Demo
 
 🎬 Video demo:
-[https://www.youtube.com/watch?v=q3fwkgnFMTY]
+[https://www.youtube.com/watch?v=OBnOz3T6Tbs]
 
 💻 GitHub Repository:
 [https://github.com/AbdiTeck/Digital-Twin-AI-]
