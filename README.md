@@ -114,7 +114,7 @@ Developed as a demonstration of Digital Twin and AI-based predictive maintenance
 📬 Demo
 
 🎬 Video demo:
-[https://www.youtube.com/watch?v=OBnOz3T6Tbs]
+[https://youtu.be/BJKuD05oXfc]
 
 💻 GitHub Repository:
 [https://github.com/AbdiTeck/Digital-Twin-AI-]
