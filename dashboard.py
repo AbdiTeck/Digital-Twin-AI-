@@ -1,270 +1,349 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
-import time
+import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
+from streamlit_autorefresh import st_autorefresh
 
+# -----------------------------
+# CONFIG
+# -----------------------------
+st.set_page_config(layout="wide")
 
+# -----------------------------
+# DARK UI
+# -----------------------------
 st.markdown("""
 <style>
-.blink {
-    animation: blinker 1s linear infinite;
-    color: red;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
+.stApp {
+    background-color: #000000;
 }
-@keyframes blinker {
-    50% { opacity: 0; }
+
+.card {
+    background-color: #0a1a22;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 0px 15px rgba(0,255,150,0.1);
+}
+
+.big-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #00ff88;
+}
+
+.label {
+    color: #8aa;
 }
 </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(layout="wide")
+# -----------------------------
+# AUTO REFRESH
+# -----------------------------
+st_autorefresh(interval=3000, key="refresh")
 
 # -----------------------------
-# SESSION STATE (IMPORTANT)
+# SESSION STATE INIT
 # -----------------------------
-if "mode" not in st.session_state:
-    st.session_state.mode = "Normal"
+if "temp" not in st.session_state:
+    st.session_state.temp = 70.0
+    st.session_state.vib = 5.0
+    st.session_state.pres = 100.0
 
-if "data" not in st.session_state:
-    st.session_state.data = []
+if "history" not in st.session_state:
+    st.session_state.history = pd.DataFrame(
+        columns=["Temperature", "Vibration", "Pressure"]
+    )
+
+if "was_failure" not in st.session_state:
+    st.session_state.was_failure = False
 
 # -----------------------------
-# HEADER
+# TITLE + TOP-RIGHT GIF
 # -----------------------------
-st.title("🧠 Digital Twin Pump Dashboard")
+col_title, col_gif = st.columns([3, 1])
+
+with col_title:
+    st.title("⚓ AI Digital Twin – Pump Monitoring")
+
+with col_gif:
+    st.image("assets/ai_alert.gif", use_container_width=True)
 
 # -----------------------------
-# MODE SELECTOR (SOFT RESET)
+# MODE
 # -----------------------------
 mode = st.selectbox("Operating Mode", ["Normal", "Degrading", "Failure"])
 
-# Reset hvis mode endres
-if mode != st.session_state.mode:
-    st.session_state.mode = mode
-    st.session_state.data = []
+# Track failure
+if mode == "Failure":
+    st.session_state.was_failure = True
 
 # -----------------------------
-# GENERATE SENSOR DATA
+# SIMULATION (FIXED 🔥)
 # -----------------------------
-def generate_data(mode):
-    if mode == "Normal":
-        return (
-            np.random.normal(70, 2),   # temp
-            np.random.normal(5, 1),    # vib
-            np.random.normal(100, 2)   # pressure
-        )
-    elif mode == "Degrading":
-        return (
-            np.random.normal(90, 5),
-            np.random.normal(10, 2),
-            np.random.normal(95, 3)
-        )
-    else:  # Failure
-        return (
-            np.random.normal(110, 5),
-            np.random.normal(18, 3),
-            np.random.normal(85, 4)
-        )
+if mode == "Failure":
+    # ❄️ Freeze system
+    pass
 
-# -----------------------------
-# UPDATE DATA (LIVE)
-# -----------------------------
-temp, vib, pres = generate_data(mode)
+elif mode == "Degrading":
+    st.session_state.temp += np.random.uniform(0.3, 1.0)
+    st.session_state.vib += np.random.uniform(0.1, 0.5)
+    st.session_state.pres -= np.random.uniform(0.3, 1.0)
 
-st.session_state.data.append({
-    "temperature": temp,
-    "vibration": vib,
-    "pressure": pres
-})
+elif mode == "Normal":
+    # 🔄 Reset after failure
+    if st.session_state.was_failure:
+        st.session_state.temp = 70.0
+        st.session_state.vib = 5.0
+        st.session_state.pres = 100.0
+        st.session_state.was_failure = False
 
-df = pd.DataFrame(st.session_state.data)
+    st.session_state.temp += np.random.uniform(-0.5, 0.5)
+    st.session_state.vib += np.random.uniform(-0.2, 0.2)
+    st.session_state.pres += np.random.uniform(-0.5, 0.5)
 
-# Keep last 50 points
-df = df.tail(50)
+temperature = st.session_state.temp
+vibration = st.session_state.vib
+pressure = st.session_state.pres
 
 # -----------------------------
-# TRAIN AI MODEL
+# HISTORY
 # -----------------------------
-# Synthetic training data
-X = pd.DataFrame({
-    "temperature": np.random.uniform(60, 120, 500),
-    "vibration": np.random.uniform(2, 20, 500),
-    "pressure": np.random.uniform(80, 110, 500)
-})
+new_row = pd.DataFrame([{
+    "Temperature": float(temperature),
+    "Vibration": float(vibration),
+    "Pressure": float(pressure)
+}])
 
-y = ((X["temperature"] > 100) | 
-     (X["vibration"] > 15) | 
-     (X["pressure"] < 90)).astype(int)
+st.session_state.history = pd.concat(
+    [st.session_state.history, new_row],
+    ignore_index=True
+).tail(30)
+
+# -----------------------------
+# MODEL
+# -----------------------------
+X = pd.DataFrame(
+    np.random.rand(200, 3) * [120, 20, 120],
+    columns=["Temperature", "Vibration", "Pressure"]
+)
+
+y = (
+    (X["Temperature"] > 100) |
+    (X["Vibration"] > 15) |
+    (X["Pressure"] < 90)
+).astype(int)
 
 model = RandomForestClassifier()
 model.fit(X, y)
 
-# -----------------------------
-# PREDICTION INPUT
-# -----------------------------
-input_df = pd.DataFrame({
-    "temperature": [temp],
-    "vibration": [vib],
-    "pressure": [pres]
-})
+input_df = pd.DataFrame([{
+    "Temperature": temperature,
+    "Vibration": vibration,
+    "Pressure": pressure
+}])
 
 prediction = model.predict(input_df)[0]
+confidence = model.predict_proba(input_df)[0][1]
 
 # -----------------------------
-# HEALTH SCORE
+# HEALTH
 # -----------------------------
 health = 100 - (
-    0.7 * max(0, temp - 70) +
-    2.0 * max(0, vib - 5) +
-    1.5 * max(0, 100 - pres)
+    0.5 * max(0, temperature - 70) +
+    2.0 * max(0, vibration - 5) +
+    1.5 * max(0, 100 - pressure)
 )
-
 health = max(0, min(100, health))
 
 # -----------------------------
-# STATUS LOGIC (FIXED)
+# STATUS COLORS
 # -----------------------------
-if temp > 100 or vib > 15 or pres < 90:
-    status = "🔴 FAILURE LIKELY"
-    color = "red"
-elif temp > 85 or vib > 10 or pres < 95:
-    status = "🟡 DEGRADING"
-    color = "orange"
+if mode == "Failure":
+    status = "🔴 RISK"
+    status_color = "red"
+elif mode == "Degrading":
+    status = "🟡 WARNING"
+    status_color = "orange"
 else:
     status = "🟢 NORMAL"
-    color = "green"
+    status_color = "#00ff88"
 
 # -----------------------------
-# LAYOUT (NO SCROLL)
+# AGENT LOGIC
 # -----------------------------
-col1, col2 = st.columns([2, 1])
+def explain(temp, vib, pres):
+    reasons = []
+    if temp > 100:
+        reasons.append("High temperature")
+    if vib > 15:
+        reasons.append("High vibration")
+    if pres < 90:
+        reasons.append("Low pressure")
+    return reasons if reasons else ["System stable"]
+
+def agent(temp, vib, pres, health):
+    actions = []
+    if temp > 100:
+        actions.append("Reduce load")
+    if vib > 15:
+        actions.append("Inspect bearings")
+    if pres < 90:
+        actions.append("Check pressure system")
+    if health < 30 or mode == "Failure":
+        actions.append("🚨 Emergency shutdown executed")
+    return actions if actions else ["No action needed"]
+
+reasons = explain(temperature, vibration, pressure)
+actions = agent(temperature, vibration, pressure, health)
 
 # -----------------------------
-# LEFT: SENSOR DATA
+# TOP CARDS
 # -----------------------------
+col1, col2, col3 = st.columns(3)
+
 with col1:
-    st.subheader("📈 24h Sensor Analysis (Digital Twin CFD View)")
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">Pump Health</div>
+        <div class="big-number">{health:.0f}%</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Generer tidsserie (basert på mode)
-    def generate_timeseries(mode):
-        time = pd.date_range(end=pd.Timestamp.now(), periods=200, freq="min")
+with col2:
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">AI Confidence</div>
+        <div class="big-number">{confidence*100:.0f}%</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        if mode == "Normal":
-            temp = np.random.normal(70, 2, 200)
-            vib = np.random.normal(5, 1, 200)
-            pressure = np.random.normal(100, 2, 200)
+with col3:
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">System Status</div>
+        <div class="big-number" style="color:{status_color}">
+            {status}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        elif mode == "Degrading":
-            temp = np.linspace(70, 105, 200) + np.random.normal(0, 2, 200)
-            vib = np.linspace(5, 18, 200) + np.random.normal(0, 1, 200)
-            pressure = np.linspace(100, 85, 200) + np.random.normal(0, 2, 200)
+# -----------------------------
+# SENSOR CARDS
+# -----------------------------
+col4, col5, col6 = st.columns(3)
 
-        else:  # Failure
-            temp = np.linspace(90, 130, 200) + np.random.normal(0, 3, 200)
-            vib = np.linspace(10, 25, 200) + np.random.normal(0, 2, 200)
-            pressure = np.linspace(95, 70, 200) + np.random.normal(0, 3, 200)
+with col4:
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">Temperature</div>
+        <div class="big-number">{temperature:.1f}°C</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        return pd.DataFrame({
-            "time": time,
-            "temperature": temp,
-            "vibration": vib,
-            "pressure": pressure
-        })
+with col5:
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">Vibration</div>
+        <div class="big-number">{vibration:.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    df = generate_timeseries(mode)
+with col6:
+    st.markdown(f"""
+    <div class="card">
+        <div class="label">Pressure</div>
+        <div class="big-number">{pressure:.1f}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Smooth (CFD feel)
-    df["temp_ma"] = df["temperature"].rolling(10).mean()
-    df["vib_ma"] = df["vibration"].rolling(10).mean()
-    df["pressure_ma"] = df["pressure"].rolling(10).mean()
+# -----------------------------
+# GIF + SHUTDOWN
+# -----------------------------
+col_img, col_data = st.columns([1.2, 1])
 
-    import matplotlib.pyplot as plt
-    fig, ax = plt.subplots(figsize=(10, 4))
+with col_img:
+    if mode == "Failure":
+        try:
+            st.image("assets/pump_off.png", use_container_width=True)
+        except:
+            st.image("assets/pump.gif", use_container_width=True)
 
-    # Raw signals (faded)
-    ax.plot(df["time"], df["temperature"], alpha=0.3)
-    ax.plot(df["time"], df["vibration"], alpha=0.3)
-    ax.plot(df["time"], df["pressure"], alpha=0.3)
+        st.markdown(
+            "<h3 style='color:red; text-align:center;'>⛔ SYSTEM SHUTDOWN</h3>",
+            unsafe_allow_html=True
+        )
+    else:
+        st.image("assets/pump.gif", use_container_width=True)
 
-    # Smoothed lines
-    ax.plot(df["time"], df["temp_ma"], label="Temperature (avg)")
-    ax.plot(df["time"], df["vib_ma"], label="Vibration (avg)")
-    ax.plot(df["time"], df["pressure_ma"], label="Pressure (avg)")
+# -----------------------------
+# BAR CHART
+# -----------------------------
+with col_data:
+    st.subheader("📈 Live Sensor Data")
 
-    # Thresholds
-    ax.axhline(100, linestyle="--")
-    ax.axhline(15, linestyle="--")
-    ax.axhline(90, linestyle="--")
+    fig, ax = plt.subplots(figsize=(3.5, 1.8))
 
-    ax.set_title("Sensor Trends Over Time")
-    ax.legend()
+    latest = st.session_state.history.tail(1).iloc[0]
+
+    labels = ["Temp", "Vib", "Press"]
+    values = [
+        latest["Temperature"],
+        latest["Vibration"],
+        latest["Pressure"]
+    ]
+
+    ax.bar(labels, values, width=0.5, color="#00ff88")
+    ax.set_ylim(0, 80)
+
+    fig.patch.set_facecolor('black')
+    ax.set_facecolor('black')
+    ax.tick_params(colors='white')
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
 
     st.pyplot(fig)
 
 # -----------------------------
-# RIGHT: AI VOTING
+# AI PANEL
 # -----------------------------
-with col2:
-    st.subheader("🧠 AI Voting System")
+col7, col8 = st.columns(2)
 
-    votes = [tree.predict(input_df.values)[0] for tree in model.estimators_]
+with col7:
+    st.subheader("🧠 WHY")
+    for r in reasons:
+        st.write("-", r)
 
-    normal_votes = votes.count(0)
-    failure_votes = votes.count(1)
+with col8:
+    st.subheader("🤖 AI Agent")
 
-    vote_df = pd.DataFrame({
-        "Prediction": ["Normal", "Failure"],
-        "Votes": [normal_votes, failure_votes]
-    })
+    if mode == "Failure":
+        st.error("🚨 CRITICAL FAILURE DETECTED")
+        st.write("→ AI has taken control")
+        st.write("→ Pump operation terminated")
+        st.write("→ Preventing damage")
+        st.write("→ Awaiting inspection")
 
-    fig2, ax2 = plt.subplots()
+    elif mode == "Degrading":
+        st.warning("⚠️ Degrading system")
+        st.write("→ Maintenance recommended")
+        st.write("→ Monitor closely")
 
-    colors = ["green", "red"]
-
-    ax2.bar(vote_df["Prediction"], vote_df["Votes"], color=colors)
-    ax2.set_ylabel("Votes")
-    ax2.set_title("AI Decision Votes")
-    ax2.set_ylim(0, len(model.estimators_))
-
-    st.pyplot(fig2, width='stretch')
-
-# -----------------------------
-# STATUS PANEL
-# -----------------------------
-st.markdown("---")
-
-col3, col4, col5 = st.columns(3)
-
-with col3:
-    st.metric("🌡️ Temperature", f"{temp:.1f} °C")
-
-with col4:
-    st.metric("📳 Vibration", f"{vib:.1f}")
-
-with col5:
-    st.metric("⚙️ Pressure", f"{pres:.1f}")
+    else:
+        st.success("✅ System stable")
+        st.write("→ Operating normally")
 
 # -----------------------------
-# HEALTH DISPLAY
+# FORECAST
 # -----------------------------
-st.markdown(f"### ❤️ Health Score: {health:.1f}%")
+st.subheader("🔮 Forecast")
 
-st.progress(health / 100)
-
-# -----------------------------
-# STATUS TEXT
-# -----------------------------
-if "FAILURE" in status:
-    st.markdown('<div class="blink">🚨 CRITICAL FAILURE 🚨</div>', unsafe_allow_html=True)
+if mode == "Failure":
+    st.error("🚨 CRITICAL FAILURE → EMERGENCY SHUTDOWN")
+elif mode == "Degrading":
+    st.warning("⚠️ System degrading → maintenance recommended")
 else:
-    st.markdown(f"## {status}")
-
-# -----------------------------
-# AUTO REFRESH
-# -----------------------------
-time.sleep(1)
-st.rerun()
+    st.success("✅ Stable operation")
