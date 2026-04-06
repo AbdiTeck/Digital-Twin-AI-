@@ -51,6 +51,7 @@ The system simulates sensor data (temperature, vibration, pressure) and uses an 
 ### 🚨 Alert System
 - Visual warning and alarm for critical states  
 - Inspired by SCADA and industrial monitoring systems  
+- Emergency shutdown if system fails
 
 ### 📈 Time-Series Analysis (CFD-Inspired)
 - 24h-style sensor trend simulation  
